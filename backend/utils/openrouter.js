@@ -4,9 +4,9 @@
 // ⚠️ IMPORTANT: Get a FREE OpenRouter API key at https://openrouter.ai
 // 1. Sign up at https://openrouter.ai (free tier available)
 // 2. Go to https://openrouter.ai/settings/integrations to get your API key
-// 3. Add it to .env: OPENROUTER_API_KEY=sk-or-v1-your-actual-key-here
+// 3. Add it to .env: OPENROUTER_API_KEY=REPLACED_SECRET-actual-key-here
 // For now, using placeholder — this will cause 401 errors until you add a real key
-const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY || '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';
+const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY || 'REPLACED_SECRET';
 const OPENROUTER_BASE_URL = 'https://openrouter.ai/api/v1';
 
 // Free models tried in order — if one is rate-limited, the next is tried
@@ -95,7 +95,7 @@ FIX: Get a FREE OpenRouter API key:
   2. Sign up (free tier available)
   3. Get your key at https://openrouter.ai/settings/integrations
   4. Add to backend/.env:
-     OPENROUTER_API_KEY=sk-or-v1-your-key-here
+     OPENROUTER_API_KEY=REPLACED_SECRET-key-here
   5. Restart the backend
 
 Error details: ${msg}
