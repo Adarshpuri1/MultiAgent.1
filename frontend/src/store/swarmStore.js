@@ -75,9 +75,10 @@ export const useSwarmStore = create((set, get) => ({
       body: JSON.stringify(body),
     });
     if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.error || 'Failed to submit task');
-    }
+  const ct = res.headers.get('content-type') || '';
+  const err = ct.includes('application/json') ? await res.json() : {};
+  throw new Error(err.error || `Server error ${res.status}: is the backend running?`);
+}
     return res.json();
   },
 
