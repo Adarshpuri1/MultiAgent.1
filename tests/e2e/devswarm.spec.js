@@ -2,7 +2,7 @@
 // Run with: npx playwright test
 const { test, expect } = require('@playwright/test');
 
-const BASE_URL = process.env.BASE_URL || 'http://localhost:5173';
+const BASE_URL = process.env.BASE_URL || 'https://multiagent-1-backend.onrender.com';
 const TEST_USER = {
   name: 'E2E Tester',
   email: `e2e_${Date.now()}@devswarm.ai`,
