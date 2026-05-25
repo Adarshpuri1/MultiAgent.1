@@ -10,6 +10,9 @@ const AGENTS = [
   { name: 'Orion', emoji: '🔭', color: '#f59e0b', role: 'Reviewer' },
 ];
 
+// ✅ FIX 1: Read backend URL from environment variable
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 export default function AuthPage() {
   const [mode, setMode] = useState('login');
   const [form, setForm] = useState({ email: '', password: '', name: '' });
@@ -23,7 +26,10 @@ export default function AuthPage() {
     setError('');
 
     try {
-      const endpoint = mode === 'login' ? '/api/auth/login' : '/api/auth/register';
+      const endpoint = mode === 'login'
+        ? `${API_URL}/api/auth/login`       // ✅ FIX 2: Use full URL, not relative
+        : `${API_URL}/api/auth/register`;
+
       const body = mode === 'login'
         ? { email: form.email, password: form.password }
         : { email: form.email, password: form.password, name: form.name };
@@ -34,8 +40,17 @@ export default function AuthPage() {
         body: JSON.stringify(body),
       });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Auth failed');
+      // ✅ FIX 3: Safe JSON parse — never call .json() directly
+      const text = await res.text();
+      let data;
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch {
+        console.error('Non-JSON response from server:', text);
+        throw new Error('Server error — please try again later');
+      }
+
+      if (!res.ok) throw new Error(data.error || data.message || 'Auth failed');
 
       setUser(data.user);
       setToken(data.token);
@@ -50,7 +65,6 @@ export default function AuthPage() {
     <div className="h-screen bg-[#080a0f] flex overflow-hidden">
       {/* Left — Branding */}
       <div className="hidden lg:flex w-1/2 flex-col justify-between p-16 relative">
-        {/* Grid bg */}
         <div className="absolute inset-0 opacity-[0.03]"
           style={{
             backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)',
@@ -76,7 +90,6 @@ export default function AuthPage() {
           </p>
         </div>
 
-        {/* Agent cards */}
         <div className="grid grid-cols-2 gap-3">
           {AGENTS.map((agent, i) => (
             <motion.div
@@ -112,7 +125,6 @@ export default function AuthPage() {
           className="w-full max-w-md relative"
         >
           <div className="bg-[#0d1117] border border-[#1c2333] rounded-2xl p-8">
-            {/* Tabs */}
             <div className="flex bg-[#080a0f] rounded-xl p-1 mb-8">
               {['login', 'register'].map(m => (
                 <button
