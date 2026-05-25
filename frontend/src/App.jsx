@@ -47,15 +47,15 @@ export default function App() {
       setToken(stored);
       // Validate token by fetching /me
       fetch('/api/auth/me', {
-        headers: { Authorization: `Bearer ${stored}` }
-      })
-        .then(r => r.ok ? r.json() : null)
-        .then(data => {
-          if (data?.user) setUser(data.user);
-          else logout();
-        })
-        .catch(() => {})
-        .finally(() => setChecking(false));
+  headers: { Authorization: `Bearer ${stored}` }
+})
+  .then(r => r.ok ? r.json() : null)
+  .then(data => {
+    if (data?.user) setUser(data.user);
+    else logout();
+  })
+  .catch(() => {})
+  .finally(() => setChecking(false));
     } else {
       setChecking(false);
     }
