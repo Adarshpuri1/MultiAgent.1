@@ -27,8 +27,8 @@ export default function AuthPage() {
 
     try {
       const endpoint = mode === 'login'
-        ? `${API_URL}/api/auth/login`       // ✅ FIX 2: Use full URL, not relative
-        : `${API_URL}/api/auth/register`;
+        ? `${API_URL}/auth/login`       // ✅ FIX 2: Use full URL, not relative
+        : `${API_URL}/auth/register`;
 
       const body = mode === 'login'
         ? { email: form.email, password: form.password }
