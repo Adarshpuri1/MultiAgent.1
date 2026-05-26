@@ -46,7 +46,7 @@ export default function App() {
     if (stored) {
       setToken(stored);
       // Validate token by fetching /me
-      fetch('/api/auth/me', {
+      fetch('/auth/me', {
   headers: { Authorization: `Bearer ${stored}` }
 })
   .then(r => r.ok ? r.json() : null)
