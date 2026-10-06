@@ -307,9 +307,21 @@ export default function ChatArea() {
             )}
 
             <AnimatePresence>
-              {events.map((event) => (
-                <EventBubble key={event.id} event={event} />
-              ))}
+              {events.map((event, idx) => {
+                // Hide "X is working..." once that agent has finished or failed,
+                // so only the result card remains after the task completes.
+                if (event.event === 'agent_start') {
+                  const finished = events.slice(idx + 1).some(
+                    (e) =>
+                      (e.event === 'agent_done' || e.event === 'agent_error') &&
+                      e.data?.agent === event.data?.agent
+                  );
+                  if (finished) return null;
+                }
+                // idx is added to the key because Date.now() ids can collide
+                // when parallel agents emit in the same millisecond.
+                return <EventBubble key={`${event.id}-${idx}`} event={event} />;
+              })}
             </AnimatePresence>
           </div>
         )}
