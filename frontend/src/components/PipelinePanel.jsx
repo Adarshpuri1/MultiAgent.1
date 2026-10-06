@@ -68,11 +68,19 @@ export default function PipelinePanel() {
   };
 
   // Count events per type
-  const agentDoneCount = events.filter(e => e.event === 'agent_done').length;
+  // Zara (zipper) runs after completion as a 7th phase, so she is not counted
+  // among the 4 build agents (otherwise it shows 5/4).
+  const agentDoneCount = Math.min(
+    events.filter(e => e.event === 'agent_done' && e.data?.agent !== 'zipper').length,
+    4
+  );
   const interAgentCount = events.filter(e => e.event === 'inter_agent_message').length;
   const conflictCount = events.filter(e => e.event === 'conflict_detected').length;
 
   const isComplete = currentPhase >= 6;
+
+  // Backend emits phase 7 (Zara packaging) after completion — cap at 100%
+  const progress = Math.min(Math.round((currentPhase / 6) * 100), 100);
 
   return (
     <div className="p-4 space-y-4">
@@ -102,13 +110,13 @@ export default function PipelinePanel() {
       <div className="mt-4">
         <div className="flex justify-between text-xs text-[#4a5568] mb-2 font-mono">
           <span>Progress</span>
-          <span>{Math.round((currentPhase / 6) * 100)}%</span>
+          <span>{progress}%</span>
         </div>
         <div className="h-1.5 bg-[#1c2333] rounded-full overflow-hidden">
           <motion.div
             className="h-full rounded-full bg-gradient-to-r from-cyan-400 to-purple-500"
             initial={{ width: '0%' }}
-            animate={{ width: `${(currentPhase / 6) * 100}%` }}
+            animate={{ width: `${progress}%` }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
           />
         </div>
